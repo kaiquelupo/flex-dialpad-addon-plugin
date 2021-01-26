@@ -1,0 +1,4 @@
+name: flex-dialpad-addon
+runtime: nodejs
+description: Adds agent to agent outbound call and external number transfer to Twilio Flex native dialpad
+main: src/resources

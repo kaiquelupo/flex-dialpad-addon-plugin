@@ -1,0 +1,67 @@
+name: Twilio - Deploy
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - production
+      - staging
+      - dev
+    paths:
+      - src/**
+
+env:
+  NODE_VERSION: '10.x' # set this to the node version to use
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+
+jobs:
+  deploy-resources:
+    name: Deploy Resources
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Install Pulumi CLI
+        uses: pulumi/action-install-pulumi-cli@releases/v1
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: npm install
+        run: |
+          npm install
+      - name: Create variables
+        id: vars 
+        run: |
+          branch=${GITHUB_REF#refs/heads/} 
+          echo "BRANCH_NAME=${branch}" >> $GITHUB_ENV
+          array=( 
+            TWILIO_ACCOUNT_SID TWILIO_AUTH_TOKEN FLEX_WORKSPACE_SID CHAT_SERVICE_SID 
+            SMS_TASK_CHANNEL_SID EVERYONE_TASK_QUEUE_SID TWILIO_PHONE_NUMBER FLEX_PROXY_SERVICE_SID
+          )
+          for i in "${array[@]}"
+          do
+            echo "${i}_VAR=${branch^^}_${i}" >> $GITHUB_ENV
+          done
+      - name: Check or create stack
+        shell: bash
+        run: pulumi stack init $BRANCH_NAME || echo "Stack already exists"
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
+      - name: Run Pulumi Up
+        shell: bash
+        run: npm run ci:deploy-resources
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          PULUMI_CI: up
+          PULUMI_ROOT: src/resources
+          BRANCH_NAME: ${{ env.BRANCH_NAME }} 
+          TWILIO_ACCOUNT_SID: ${{  secrets[env.TWILIO_ACCOUNT_SID_VAR] }}
+          TWILIO_AUTH_TOKEN: ${{  secrets[env.TWILIO_AUTH_TOKEN_VAR] }}
+          FLEX_WORKSPACE_SID: ${{  secrets[env.FLEX_WORKSPACE_SID_VAR] }}
+          CHAT_SERVICE_SID: ${{  secrets[env.CHAT_SERVICE_SID_VAR] }}
+          SMS_TASK_CHANNEL_SID: ${{  secrets[env.SMS_TASK_CHANNEL_SID_VAR] }}
+          EVERYONE_TASK_QUEUE_SID: ${{  secrets[env.EVERYONE_TASK_QUEUE_SID_VAR] }}
+          TWILIO_PHONE_NUMBER: ${{  secrets[env.TWILIO_PHONE_NUMBER_VAR] }}
+          FLEX_PROXY_SERVICE_SID: ${{  secrets[env.FLEX_PROXY_SERVICE_SID_VAR] }}
