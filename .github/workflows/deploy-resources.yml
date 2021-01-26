@@ -60,6 +60,6 @@ jobs:
           TWILIO_ACCOUNT_SID: ${{  secrets[env.TWILIO_ACCOUNT_SID_VAR] }}
           TWILIO_AUTH_TOKEN: ${{  secrets[env.TWILIO_AUTH_TOKEN_VAR] }}
           FLEX_WORKSPACE_SID: ${{  secrets[env.FLEX_WORKSPACE_SID_VAR] }}
-          VOICE_TASK_CHANNEL_SID: ${{  secrets[env.VOICE_TASK_CHANNEL_SID] }}
-          TASK_QUEUE_SID: ${{  secrets[env.TASK_QUEUE_SID] }}
-          TWILIO_NUMBER: ${{  secrets[env.TWILIO_NUMBER] }}
+          VOICE_TASK_CHANNEL_SID: ${{  secrets[env.VOICE_TASK_CHANNEL_SID_VAR] }}
+          TASK_QUEUE_SID: ${{  secrets[env.TASK_QUEUE_SID_VAR] }}
+          TWILIO_NUMBER: ${{  secrets[env.TWILIO_NUMBER_VAR] }}
