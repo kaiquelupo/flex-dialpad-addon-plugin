@@ -36,8 +36,8 @@ jobs:
           branch=${GITHUB_REF#refs/heads/} 
           echo "BRANCH_NAME=${branch}" >> $GITHUB_ENV
           array=( 
-            TWILIO_ACCOUNT_SID TWILIO_AUTH_TOKEN FLEX_WORKSPACE_SID CHAT_SERVICE_SID 
-            SMS_TASK_CHANNEL_SID EVERYONE_TASK_QUEUE_SID TWILIO_PHONE_NUMBER FLEX_PROXY_SERVICE_SID
+            TWILIO_ACCOUNT_SID TWILIO_AUTH_TOKEN FLEX_WORKSPACE_SID  
+            VOICE_TASK_CHANNEL_SID TASK_QUEUE_SID TWILIO_NUMBER
           )
           for i in "${array[@]}"
           do
@@ -60,8 +60,6 @@ jobs:
           TWILIO_ACCOUNT_SID: ${{  secrets[env.TWILIO_ACCOUNT_SID_VAR] }}
           TWILIO_AUTH_TOKEN: ${{  secrets[env.TWILIO_AUTH_TOKEN_VAR] }}
           FLEX_WORKSPACE_SID: ${{  secrets[env.FLEX_WORKSPACE_SID_VAR] }}
-          CHAT_SERVICE_SID: ${{  secrets[env.CHAT_SERVICE_SID_VAR] }}
-          SMS_TASK_CHANNEL_SID: ${{  secrets[env.SMS_TASK_CHANNEL_SID_VAR] }}
-          EVERYONE_TASK_QUEUE_SID: ${{  secrets[env.EVERYONE_TASK_QUEUE_SID_VAR] }}
-          TWILIO_PHONE_NUMBER: ${{  secrets[env.TWILIO_PHONE_NUMBER_VAR] }}
-          FLEX_PROXY_SERVICE_SID: ${{  secrets[env.FLEX_PROXY_SERVICE_SID_VAR] }}
+          VOICE_TASK_CHANNEL_SID: ${{  secrets[env.SMS_TASK_CHANNEL_SID_VAR] }}
+          TASK_QUEUE_SID: ${{  secrets[env.EVERYONE_TASK_QUEUE_SID_VAR] }}
+          TWILIO_NUMBER: ${{  secrets[env.TWILIO_PHONE_NUMBER_VAR] }}
